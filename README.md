@@ -1,4 +1,4 @@
-#Flappy-Bird 
+# Flappy-Bird 
 **Flappy Bird** is a classic and addictive arcade-style game that challenges players to navigate a bird through a series of pipes. The objective is simple: keep the bird flying as long as possible by tapping the screen (or pressing a key) to make the bird "flap" and avoid crashing into the pipes.
 
 
