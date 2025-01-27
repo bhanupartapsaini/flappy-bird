@@ -191,6 +191,36 @@ function moveBird(e) {
     }
   }
 }
+// Prevent pinch zoom (mobile)
+document.addEventListener("touchmove", function (event) {
+  if (event.scale !== 1) {
+    event.preventDefault();
+  }
+}, { passive: false });
+
+// Prevent double-tap zoom (mobile)
+let lastTouchEnd = 0;
+document.addEventListener("touchend", function (event) {
+  let now = new Date().getTime();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+
+// Prevent zooming with Ctrl + Scroll (desktop)
+document.addEventListener("wheel", function (event) {
+  if (event.ctrlKey) {
+    event.preventDefault();
+  }
+}, { passive: false });
+
+// Prevent zooming with keyboard shortcuts (Ctrl + "+" or "Ctrl + "-")
+document.addEventListener("keydown", function (event) {
+  if ((event.ctrlKey || event.metaKey) && (event.key === "+" || event.key === "-" || event.key === "0")) {
+    event.preventDefault();
+  }
+});
 
 function detectCollision(a, b) {
   return (
