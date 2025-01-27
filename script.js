@@ -5,15 +5,13 @@ let boardHeight = 640;
 let context;
 
 //bird
-let birdWidth = 34; // width/height ratio = 408/228 = 17/12
+let birdWidth = 34;
 let birdHeight = 24;
 let birdX = boardWidth / 8;
 let birdY = boardHeight / 2;
 
-// let birdImg;
 let birdImgs = [];
 let birdImgsIndex = 0;
-
 
 let bird = {
   x: birdX,
@@ -24,7 +22,7 @@ let bird = {
 
 //pipes
 let pipeArray = [];
-let pipeWidth = 64; //width/height ratio = 384/3072 =1/8
+let pipeWidth = 64;
 let pipeHeight = 512;
 let pipeX = boardWidth;
 let pipeY = 0;
@@ -33,23 +31,23 @@ let topPipeImg;
 let bottomPipeImg;
 
 //physics
-let velocityX = -2; //pipes moving left speed
-let velocityY = 0; // bird jump speed
+let velocityX = -2;
+let velocityY = 0;
 let gravity = 0.4;
 
 let gameOver = false;
-let score =0;
+let score = 0;
+let lastScore = localStorage.getItem("lastScore") || 0; // Retrieve last score from localStorage
 
 //sounds
 let wingSound = new Audio("./assets/sfx_wing.wav");
-let hitSound =  new Audio ("./assets/sfx_hit.wav");
+let hitSound = new Audio("./assets/sfx_hit.wav");
 let bgm = new Audio("./assets/bgm_mario.mp3");
 bgm.loop = true;
 
-let dieSound = new Audio ("./assets/sfx_die.wav");
-let point = new Audio ("./assets/sfx_point.wav");
-let swooshing = new Audio ("./assets/sfx_swooshing.wav");
-
+let dieSound = new Audio("./assets/sfx_die.wav");
+let point = new Audio("./assets/sfx_point.wav");
+let swooshing = new Audio("./assets/sfx_swooshing.wav");
 
 window.onload = function () {
   board = document.getElementById("board");
@@ -57,65 +55,55 @@ window.onload = function () {
   board.width = boardWidth;
   context = board.getContext("2d");
 
-  //draw flappy bird
-  // context.fillStyle = "green";
-  // context.fillRect (bird.x, bird.y, bird.width, bird.height);
+  for (let i = 0; i < 4; i++) {
+    let birdImg = new Image();
+    birdImg.src = `./assets/flappybird${i}.png`;
+    birdImgs.push(birdImg);
+  }
 
-  //load images
-  // birdImg = new Image();
-  // birdImg.src = "./assets/flappybird.png";
-  // birdImg.onload = function () {
-  //   context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-  // }
-for (let i = 0; i< 4; i++){
-  let birdImg = new Image();
-  birdImg.src = `./assets/flappybird${i}.png`;
-  birdImgs.push(birdImg); 
-}
   topPipeImg = new Image();
   topPipeImg.src = "./assets/toppipe.png";
-
   bottomPipeImg = new Image();
   bottomPipeImg.src = "./assets/bottompipe.png";
 
-
   requestAnimationFrame(update);
-  setInterval(placePipes, 1500); //every 1.5 seconds
-  setInterval(animateBird, 100); 
+  setInterval(placePipes, 1500);
+  setInterval(animateBird, 100);
   document.addEventListener("keydown", moveBird);
-    board.addEventListener("touchstart", moveBird); // Touch input to jump
-
-}
+  board.addEventListener("touchstart", moveBird);
+};
 
 function update() {
   requestAnimationFrame(update);
-  if(gameOver){
-    return;
-  }
+  if (gameOver) return;
+
   context.clearRect(0, 0, board.width, board.height);
 
-  //bird
+  // Bird physics
   velocityY += gravity;
-  if (velocityY > 0 && !swooshing.playing) { // Check if bird is falling
-    swooshing.play();
-  }
   bird.y = Math.max(bird.y + velocityY, 0);
-  // context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+  // Play swooshing sound when falling
+  try {
+    if (velocityY > 0) {
+      swooshing.play();
+    }
+  } catch (e) {}
+
   context.drawImage(birdImgs[birdImgsIndex], bird.x, bird.y, bird.width, bird.height);
 
-
-  if(bird.y > board.height){
+  if (bird.y > board.height) {
     dieSound.play();
     gameOver = true;
   }
 
-  //pipes
+  // Pipes movement
   for (let i = 0; i < pipeArray.length; i++) {
     let pipe = pipeArray[i];
     pipe.x += velocityX;
     context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
 
-    if(!pipe.passed && bird.x > pipe.x + pipe.width){
+    if (!pipe.passed && bird.x > pipe.x + pipe.width) {
       score += 0.5;
       pipe.passed = true;
       point.play();
@@ -127,40 +115,37 @@ function update() {
     }
   }
 
-  //clear pipes
-  while(pipeArray.length > 0 && pipeArray[0].x < -pipeWidth){
+  // Remove old pipes
+  while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
     pipeArray.shift();
   }
 
-  //score
+  // Score display
   context.fillStyle = "white";
-  context.font = " 45px sans-serif";
-  context.fillText(score, 5, 45);
+  context.font = "30px sans-serif";
+  context.fillText(`Score: ${score}`, 5, 45);
+  context.fillText(`Last Score: ${lastScore}`, 5, 90); // Display last score
 
-
+  // Game Over Display
   if (gameOver) {
-    context.fillText("GAME OVER", 5, 90);
-    bgm.pause();
-}
+    lastScore = score; // Store last score at game over
+    localStorage.setItem("lastScore", lastScore); // Save last score to localStorage
+
+    context.fillText("GAME OVER", 5, 135);
+  }
 }
 
-function animateBird(){
+function animateBird() {
   birdImgsIndex++;
   birdImgsIndex %= birdImgs.length;
 }
 
 function placePipes() {
+  if (gameOver) return;
 
-  if(gameOver){
-    return;
-  }
-  //(0-1)* pipeHeight/2.
-  //0 -> -128(pipeHeight/4)
-  //1 ->  -128 -256 (pipeHeight/4 - pipeHeight/2) = -3/4 pipeHeight
-
-  let randomPipeY = pipeY - pipeHeight/4 - Math.random() * (pipeHeight / 2);
+  let randomPipeY = pipeY - pipeHeight / 4 - Math.random() * (pipeHeight / 2);
   let openingSpace = board.height / 4;
-    
+
   let topPipe = {
     img: topPipeImg,
     x: pipeX,
@@ -181,33 +166,36 @@ function placePipes() {
   };
   pipeArray.push(bottomPipe);
 }
+
 function moveBird(e) {
-  if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX" ||  e.type === "touchstart") {
-    if(bgm.paused){
-    bgm.play();
-    }
+  if (
+    e.code == "Space" ||
+    e.code == "ArrowUp" ||
+    e.code == "KeyX" ||
+    e.type === "touchstart"
+  ) {
+    if (bgm.paused) bgm.play();
 
     wingSound.play();
-    
 
-    //jump
+    // Jump
     velocityY = -6;
 
-    //reset game
-    if(gameOver){
+    // Reset game
+    if (gameOver) {
       bird.y = birdY;
-      pipeArray=[];
+      pipeArray = [];
       score = 0;
-  gameOver = false;
-  
+      gameOver = false;
     }
   }
 }
 
 function detectCollision(a, b) {
-  return   a.x < b.x + b.width &&
+  return (
+    a.x < b.x + b.width &&
     a.x + a.width > b.x &&
     a.y < b.y + b.height &&
-    a.y + a.height > b.y;
-    
+    a.y + a.height > b.y
+  );
 }
