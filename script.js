@@ -37,7 +37,7 @@ let gravity = 0.4;
 
 let gameOver = false;
 let score = 0;
-let lastScore = localStorage.getItem("lastScore") || 0; // Retrieve last score from localStorage
+let highestScore = 0; // Track highest score in session
 
 //sounds
 let wingSound = new Audio("./assets/sfx_wing.wav");
@@ -124,12 +124,13 @@ function update() {
   context.fillStyle = "white";
   context.font = "30px sans-serif";
   context.fillText(`Score: ${score}`, 5, 45);
-  context.fillText(`Last Score: ${lastScore}`, 5, 90); // Display last score
+  context.fillText(`Highest Score: ${highestScore}`, 5, 90); // Show highest score
 
   // Game Over Display
   if (gameOver) {
-    lastScore = score; // Store last score at game over
-    localStorage.setItem("lastScore", lastScore); // Save last score to localStorage
+    if (score > highestScore) {
+      highestScore = score; // Update highest score if beaten
+    }
 
     context.fillText("GAME OVER", 5, 135);
   }
