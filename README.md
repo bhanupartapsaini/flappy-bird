@@ -24,7 +24,4 @@ have a nice day.
 
 https://flapping-birds.netlify.app/
 
-![image](https://github.com/user-attachments/assets/0349e64e-4b2e-43fa-baff-0aab290070f6)
-
-![image](https://github.com/user-attachments/assets/08de90a6-1b58-48ac-b9a2-7604877b2cba)
-
+<img src="https://www.canva.com/design/DAGdYGoG_SE/Wtqcr7ELVTBn7NMuqgbivQ/view">
