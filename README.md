@@ -11,9 +11,9 @@
 The goal is to achieve the highest possible score by avoiding pipes and keeping the bird flying for as long as you can. The challenge increases as the game progresses with pipes becoming more frequent
 
 **Bird Movement** ->
-Press Spacebar
-Press Arrow Up ⬆️
-Press X - jump
+Press Spacebar,
+Press Arrow Up ⬆️,
+Press X - jump,
 
 this is a simple project 
 keep enjoying,
