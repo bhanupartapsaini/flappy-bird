@@ -83,6 +83,8 @@ for (let i = 0; i< 4; i++){
   setInterval(placePipes, 1500); //every 1.5 seconds
   setInterval(animateBird, 100); 
   document.addEventListener("keydown", moveBird);
+    board.addEventListener("touchstart", moveBird); // Touch input to jump
+
 }
 
 function update() {
