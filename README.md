@@ -3,9 +3,9 @@
 
 
 <h2>**In this game:**</h2>
-<li>**Gravity** pulls the bird down, and the player must press the spacebar (or another designated key) to make the bird jump and stay airborne.</li>
-<li>**Pipes** move from right to left, with random vertical gaps that the player must navigate the bird through.</li>
-<li>**The score** increases each time the bird successfully passes through a pair of pipes.</li>
+<li>Gravity pulls the bird down, and the player must press the spacebar (or another designated key) to make the bird jump and stay airborne.</li>
+<li>Pipes move from right to left, with random vertical gaps that the player must navigate the bird through.</li>
+<li>The score increases each time the bird successfully passes through a pair of pipes.</li>
 
 <h2>**Objective:**</h2>
 The goal is to achieve the highest possible score by avoiding pipes and keeping the bird flying for as long as you can. The challenge increases as the game progresses with pipes becoming more frequent
